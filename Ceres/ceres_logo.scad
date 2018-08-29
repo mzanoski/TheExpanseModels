@@ -1,41 +1,13 @@
+include <basic_shapes.scad>;
+
 logo_radius=50;
 base_thickness=2;
 radius_cd=logo_radius/10;
 line_height=2;
 line_thickness=2;
-
 core_left_c_thickness=line_thickness*6.5; // thickness of left, solid, core part from outter edge to inner hole
 
 $fn = 50;
-
-/****** utilities  ******/
-//TODO: round line edges
-module line(length, width, height, offsetx, offsety, offsetz, rotation, aroundx, aroundy, aroundz){
-    rotate(rotation, [aroundx, aroundy, aroundz]){
-        translate([offsetx, offsety, offsetz-0.01]){
-            cube([length, width, height+0.02]);
-        }
-    }
-}
-
-module circle(radius, line_width, height){
-    difference(){
-        cylinder(h=height, r=radius);
-        translate([0,0,-0.01]){
-            cylinder(h=height+0.02, r=radius-line_width);
-        }
-    }
- }
-
-module half_circle(radius, line_width, height, offsetx, offsety, offsetz){
-    intersection(){
-        translate([offsetx*radius,offsety*radius,offsetz*radius]){
-            cube([radius,radius*2,height]);
-        }
-        circle(radius=radius, line_width=line_width, height=height);
-    }    
-}
-
 
 /****** logo shapes  ******/
 module base(){
@@ -51,11 +23,14 @@ module core(){
     difference(){
         union(){
             // right outline
-            color([1,0,0]) half_circle(radius=radius_cd+2, line_width=line_thickness, height=line_height, offsetx=-1, offsety=-1, offsetz=0);
+            color([1,0,0]) 
+            half_circle(radius=radius_cd+2, line_width=line_thickness, height=line_height, offsetx=-1, offsety=-1, offsetz=0);
             // left c 
-            color([1,0,0]) half_circle(radius=radius_cd*4, line_width=core_left_c_thickness, height=line_height, offsetx=0, offsety=-1, offsetz=0);
+            color([1,0,0]) 
+            half_circle(radius=radius_cd*4, line_width=core_left_c_thickness, height=line_height, offsetx=0, offsety=-1, offsetz=0);
             // right c
-            color([1,0,0]) circle(radius=radius_cd*4, line_width=line_thickness, height=line_height);
+            color([1,0,0]) 
+            circle(radius=radius_cd*4, line_width=line_thickness, height=line_height);
         }
         // core line cuts
         line(
@@ -68,7 +43,8 @@ module core(){
             rotation=45,
             aroundx=0,
             aroundy=0,
-            aroundz=1
+            aroundz=1,
+            lround=true
         );
         line(
             length=core_left_c_thickness-line_thickness, 
@@ -76,7 +52,8 @@ module core(){
             height=line_height+1, 
             offsetx=core_left_c_thickness-(line_thickness*2), 
             offsety=line_thickness/2*-1, 
-            offsetz=0
+            offsetz=0,
+            lround=true
         );
         line(
             length=core_left_c_thickness-line_thickness, 
@@ -88,7 +65,8 @@ module core(){
             rotation=-45,
             aroundx=0,
             aroundy=0,
-            aroundz=1
+            aroundz=1,
+            lround=true
         );
     }
 }
@@ -153,12 +131,8 @@ module third_ring(){
 
 base();
 core();
-
-third_ring();
-
 // outter rings from inner most to outter most
 color([1,0,0]) circle(radius=radius_cd*4.7, line_width=line_thickness, height=line_height);
-
+third_ring();
 // outtermost ring
 color([1,0,0]) circle(radius=logo_radius, line_width=line_thickness+(line_thickness*.5), height=line_height);
-
