@@ -1,9 +1,9 @@
 include <basic_shapes.scad>;
 
-logo_radius=50;
-base_thickness=2;
+logo_radius=33;
+base_thickness=0;
 radius_cd=logo_radius/10;
-line_height=2;
+line_height=1;
 line_thickness=logo_radius/25;
 core_left_c_thickness=line_thickness*6.5; // thickness of left, solid, core part from outter edge to inner hole
 
@@ -24,7 +24,7 @@ module core(){
         union(){
             // core c
             color([1,0,0]) 
-            half_circle(radius=radius_cd+2, line_width=line_thickness, height=line_height, offsetx=-1, offsety=-1, offsetz=0);
+            half_circle(radius=radius_cd+1.5, line_width=line_thickness, height=line_height, offsetx=-1, offsety=-1, offsetz=0);
             // left slotted body
             color([1,0,0]) 
             half_circle(radius=radius_cd*4, line_width=core_left_c_thickness, height=line_height, offsetx=0, offsety=-1, offsetz=0);
@@ -209,7 +209,7 @@ module third_ring(){
             width=line_thickness*2.5, 
             height=line_height+1, 
             offsetx=radius_cd*4.4, 
-            offsety=-9.5, 
+            offsety=-5.5, 
             offsetz=0,
             rotation=90,
             aroundx=0,
@@ -221,7 +221,7 @@ module third_ring(){
             width=line_thickness*2.5, 
             height=line_height+1, 
             offsetx=radius_cd*4.4, 
-            offsety=4.5, 
+            offsety=2.5, 
             offsetz=0,
             rotation=90,
             aroundx=0,
@@ -236,9 +236,12 @@ module fourth_ring(){
     color([1,0,0]) circle(radius=logo_radius-5, line_width=line_thickness+(line_thickness*.5), height=line_height);
 }
 
-base();
-core();
-second_ring();
-third_ring();
-fourth_ring();
+module ceres_logo(){
+    base();
+    core();
+    second_ring();
+    third_ring();
+    fourth_ring();
+}
 
+ceres_logo();
